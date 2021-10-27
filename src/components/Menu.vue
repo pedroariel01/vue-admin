@@ -26,10 +26,10 @@
             <router-link class="nav-link" active-class="active"  to="/cart">Cart
             </router-link>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <router-link class="nav-link" active-class="active"  to="/orderTest">Test
             </router-link>
-          </li>
+          </li> -->
           
         </ul>
 
