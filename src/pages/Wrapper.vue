@@ -2,15 +2,19 @@
 <Nav />
 
 
-<div class="container-fluid">
-  <div class="row">
-    <Menu/>
+<div class="main__container">
+  
+    <div class="main__menu">
+      <Menu/>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+    </div>
+    
+
+    <main class="main__content"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
       <router-view/>
       
     </main>
-  </div>
+  
 </div>
     
 </template>
@@ -55,3 +59,20 @@ import { useStore } from 'vuex'
   }
 
 </script>
+
+<style scoped>
+.main__container{
+  padding:0 12px ;
+  display: grid;
+  grid-template-columns: 15vw 85vw;
+  grid-gap: 10px;
+}
+
+.main__menu{
+  grid-column: 1/2;
+}
+
+.main__content{
+  grid-column:2/3;
+}
+</style>
