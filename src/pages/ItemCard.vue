@@ -31,7 +31,10 @@
 <div class="card__section">
 
     <div class="card__displayer">
-        <div class="card__content" v-for="prod in prods" :key="prod.id" @click="select(prod.id)" :class="selected===prod.id?'show':'hide'" v-on:animationend="removeSel()">
+        <div class="card__content" v-for="prod in prods" :key="prod.id" @click="select(prod.id)">
+            <transition name= "ripple">
+                <div v-if="selected===prod.id" class ="card__effect"></div>
+            </transition>
             <div class="card__wrapper" >
                 <div class="card__container">
                 
@@ -70,12 +73,10 @@ export default {
         const select = (id)=>{
 
             selected.value = id;
+            setTimeout(()=>{selected.value=0},200)
         }
 
-        const removeSel = () =>{
-            selected.value = 0;
-
-        }
+        
 
         onMounted ( async () =>{
             const {data} = await axios.get(`product`)
@@ -87,7 +88,7 @@ export default {
             prods,
             select,
             selected,
-            removeSel
+            
         }
         
     },
@@ -132,6 +133,21 @@ export default {
     
 }
 
+.card__effect{
+    display: inline-block;
+    
+    height: 100%;
+    width:100%;
+    border-radius: 14px;
+    background-image:linear-gradient( to right bottom,
+                                    rgba(41,52,255,0.85),
+                                    rgba(29,199,234,0.85));
+    top:0;
+    left: 0;
+    position: absolute;
+    z-index : -1;
+    
+}
 
 .card__content::after{
     content:"";
@@ -146,7 +162,7 @@ export default {
     left: 0;
     position: absolute;
     z-index : -1;
-    transition: all .5s ;
+    
   }
 
 
@@ -174,8 +190,13 @@ animation-name:ripple;
 animation-duration : .4s
 }
 
+.ripple-enter-active {
+  animation: ripple-in 0.5s;
+}
 
-@keyframes ripple {
+
+
+@keyframes ripple-in {
   0%{
     opacity: 1;
     background-color: blue;
@@ -439,6 +460,12 @@ animation-duration : .4s
     box-shadow: none;
 
   }
+
+}
+
+::selection{
+  background-color: rgba(41,52,255,.85);
+  color: white;
 
 }
 

@@ -80,13 +80,39 @@ text-decoration: none;
   color:white;
 text-decoration: none;
 perspective:1000px;
-  background-image: linear-gradient(10deg ,transparent 0%, transparent 50%,  white 50% ) ;
-  background-size: 440%;
-  background-position: 139%;
-
+position:relative;
+  
 
     transition: all .6s ease-out;
 }
+
+.menu__item::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 3px;
+    background-color: white;
+    transform: scaleY(0);
+    transition: transform .3s,
+                width .3s .2s,
+                background-color .3s  ;
+    z-index:-1;
+
+  }
+
+  .menu__item:hover::before,
+  .menu__item--active::before{
+    transform: scaleY(1);
+    width: 100%;
+
+  }
+
+  .menu__item:active::before{
+    background-color: white;
+
+  }
 
 .menu__item:hover,
 .menu__item:active{
@@ -94,11 +120,14 @@ perspective:1000px;
       
       background-position: 100%;
       transform:  translateX(-20px) ;
+      
     }
 
 
 
+
 .menu__item--active{
+  
 
 }
 
