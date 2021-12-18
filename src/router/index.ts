@@ -16,6 +16,7 @@ import Orders from '@/pages/orders/Orders.vue'
 
 
 import ItemCard from '@/pages/ItemCard.vue'
+import CartMenu from '@/components/CartMenu.vue'
 
 import Register from '@/pages/Register.vue'
 import Login from '@/pages/Login.vue'
@@ -42,7 +43,7 @@ const routes: Array<RouteRecordRaw> = [
       {path:'/products/:id/edit',component:ProductEdit},
       {path:'/orders',component:Orders},
       {path:'/cart',component:Cart},
-      {path:'/orderTest',component:ItemCard}
+      {path:'/orderTest',component:CartMenu}
       
     ]
   },
