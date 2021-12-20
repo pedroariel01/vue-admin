@@ -13,11 +13,24 @@
         <g transform="translate(173 -10)">
         <path d="m124.45 7.4579-5.3e-4 0.08992-292.6 0.48111s-11.565 45.681 18.277 43.979c157.69-8.9971 217.61 26.396 219.64 38.267 3.4921 20.459 57.115 22.913 57.115 22.913l24.831-0.0987 24.831 0.0987s53.623-2.4538 57.115-22.913c2.0263-11.872 61.945-47.264 219.64-38.267 29.842 1.7026 18.277-43.979 18.277-43.979l-292.6-0.48111-5.3e-4 -0.08992-27.262 0.04496z" fill= "url(#grad2)"/>
         </g>
+
+        
         <foreignObject class='buy__area'>
+          <div class="price">
+            Total Price 
+            <b>${{total_price}}</b>
+          </div>
+          <div  class="search">
+            <input v-model="search_title" type="text" class="search__input" placeholder="Search products">
+            <button class="search__button" @click="filter_data()"  >
+              Find
+            </button>
+          </div>
             <div>
-            <button class="buy__button" style="transform:scale(1)">BUY</button>
+            <button @click="submit" class="buy__button" style="transform:scale(1)">BUY</button>
             </div>
         </foreignObject>
+
         
         
         </svg>
@@ -49,12 +62,16 @@ import { useStore } from 'vuex'
 import CartCard from '@/components/CartCard.vue';
 export default {
     name:"CartMenu",
-    components:{CartCard,Paginator},
+    components:{CartCard},
     setup() {
 
        const selected_products = ref([] as any)
         
         const lastpage = ref(0)
+
+        const search_title = ref('')
+
+        const total_price = ref(0)
 
         const store = useStore()
 
@@ -69,6 +86,26 @@ export default {
         }
 
         const cart_elements = ref([] as any)
+
+        const filter_data = async () =>{
+          if(search_title.value){
+            const {data}= await axios.get(`product/filter/${search_title.value}`)
+
+            cart_elements.value=  data.map((prod:Product)=>
+                {
+                  const cart = selected_products.value.find((c:any) => c.product.id===prod.id)
+                  let count = 0
+                  if(cart){
+                    count = cart.count
+
+                  }
+                  return {product:prod,count:count}}
+            )
+          }
+          else{
+            load_prods()
+          }
+        }
 
         const load_prods = async (page=1) =>{
             
@@ -95,6 +132,7 @@ export default {
             const elem = cart_elements.value.find((c:any) => c.product.id===id);
             selected_products.value = selected_products.value.filter((pr:any) => pr.product.id !== elem.product.id)
             elem.count=0
+            calc_total_price()
         }
 
         const increase= (id:number) =>{
@@ -105,6 +143,15 @@ export default {
             elem.count+=1
             const prod = selected_products.value.find((c:any) => c.product.id===id);
             prod.count=elem.count
+            calc_total_price()
+        }
+
+        const calc_total_price =() => {
+           total_price.value = selected_products.value.reduce((part:number,current:any)=>
+             part +  current.count*parseInt(current.product.price),0)
+           
+          //  console.log(total_price.value);
+             
         }
 
 
@@ -158,7 +205,10 @@ export default {
             lastpage,
             submit,
             select,
-            selected
+            selected,
+            search_title,
+            filter_data,
+            total_price
 
         }
         
@@ -299,6 +349,73 @@ animation-duration : .4s
   
   
 }
+
+.price{
+  position: absolute;
+  
+  border:none;
+  top: 3%;
+  left: 20%;
+  color:white;
+
+}
+
+.search{
+
+  
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  margin: 0;
+  position: absolute;
+  width:300px;
+  height:30px;
+  border:none;
+  top: 15%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+}
+
+.search__input{
+
+    font-family: inherit;
+    font-size: inherit;
+    background-color: #f4f2f2;
+    border: none;
+    color: inherit;
+    padding: 5px 30px;
+    border-radius: 5000px;
+    width: 90%;
+    transition: width .5s;
+    margin-right: -3.25rem;
+}
+
+.search__input:focus{
+      width: 100%;
+      outline: none;
+      background-color: #f0eeee;
+    }
+
+.search__input:focus + .search__button{
+  background-color: #f0eeee;
+}
+
+.search__button{
+  border: none;
+  background-color: #f4f2f2;
+  
+
+}
+
+.search__button:focus{
+    outline: none;
+  }
+
+  .search__button:active{
+    transform: translateY(2px);
+  }
+
+
 
 .buy__area{
   width:100%;
